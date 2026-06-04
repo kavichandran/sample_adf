@@ -1,0 +1,15 @@
+{
+	"name": "ADFadea06",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Enabled",
+			"editable": true
+		}
+	},
+	"location": "southindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "27f6f60c-be31-4c39-86d6-a50a0a912482",
+		"tenantId": "7a7367c5-cba2-4243-a1a8-dd56da5ebd5c"
+	}
+}

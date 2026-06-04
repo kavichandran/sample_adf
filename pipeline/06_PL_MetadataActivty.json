@@ -1,0 +1,32 @@
+{
+	"name": "06_PL_MetadataActivty",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Metadata1",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "DS_sqlDBadea06",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"exists"
+					]
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2026-05-20T04:39:10Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

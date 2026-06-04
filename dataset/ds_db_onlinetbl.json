@@ -1,0 +1,17 @@
+{
+	"name": "ds_db_onlinetbl",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "sales_df_online"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

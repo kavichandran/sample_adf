@@ -1,0 +1,32 @@
+{
+	"name": "04_PL_CopySQLtoFiles",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "number",
+					"value": {
+						"value": "@trim('    Data Factory    ')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"number": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-05-19T00:34:35Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,90 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Sales_100",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_Sales_100",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_db_onlinetbl",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "union1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Region as string,",
+				"          Country as string,",
+				"          {Item Type} as string,",
+				"          {Sales Channel} as string,",
+				"          {Order Priority} as string,",
+				"          {Order Date} as string,",
+				"          {Order ID} as string,",
+				"          {Ship Date} as string,",
+				"          {Units Sold} as string,",
+				"          {Unit Price} as string,",
+				"          {Unit Cost} as string,",
+				"          {Total Revenue} as string,",
+				"          {Total Cost} as string,",
+				"          {Total Profit} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source(output(",
+				"          Region as string,",
+				"          Country as string,",
+				"          {Item Type} as string,",
+				"          {Sales Channel} as string,",
+				"          {Order Priority} as string,",
+				"          {Order Date} as string,",
+				"          {Order ID} as string,",
+				"          {Ship Date} as string,",
+				"          {Units Sold} as string,",
+				"          {Unit Price} as string,",
+				"          {Unit Cost} as string,",
+				"          {Total Revenue} as string,",
+				"          {Total Cost} as string,",
+				"          {Total Profit} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source2",
+				"source1, source2 union(byName: true)~> union1",
+				"union1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}

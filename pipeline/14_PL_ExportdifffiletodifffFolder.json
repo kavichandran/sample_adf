@@ -1,0 +1,201 @@
+{
+	"name": "14_PL_ExportdifffiletodifffFolder",
+	"properties": {
+		"activities": [
+			{
+				"name": "fetching distinct region and country",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "select distinct Region,replace(country,'''','') as country\nfrom [dbo].[100Sales] where Region ='Sub-Saharan Africa' and country like 'cote%'"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "loop region and country",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "fetching distinct region and country",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('fetching distinct region and country').output.resultSets[0].rows",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Set region",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Region",
+								"value": {
+									"value": "@item().Region",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set country",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Country",
+								"value": {
+									"value": "@item().Country",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "copy to diff folder",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Set region",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Set country",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('select * from  [dbo].[100Sales] where Region =','''',variables('Region'),'''', ' and replace(Country,'''''''','''')= ','''',variables('Country'),'''')",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_sqldb_adea06_query",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Ds_DiffFolderRegionCountry",
+									"type": "DatasetReference",
+									"parameters": {
+										"Folder": {
+											"value": "@variables('Region')",
+											"type": "Expression"
+										},
+										"Filename": {
+											"value": "@variables('Country')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "query",
+					"value": {
+						"value": "@concat('select * from  [dbo].[100Sales] where Region =','''',variables('Region'),'''', ' and replace(Country,'''''''','''')= ','''',variables('Country'),'''')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"Region": {
+				"type": "String"
+			},
+			"Country": {
+				"type": "String"
+			},
+			"query": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-05-24T02:02:13Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

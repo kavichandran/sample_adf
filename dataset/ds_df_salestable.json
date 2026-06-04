@@ -1,0 +1,17 @@
+{
+	"name": "ds_df_salestable",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "sales_df"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

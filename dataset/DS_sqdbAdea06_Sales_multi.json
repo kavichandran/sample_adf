@@ -1,0 +1,17 @@
+{
+	"name": "DS_sqdbAdea06_Sales_multi",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "sales_multi"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

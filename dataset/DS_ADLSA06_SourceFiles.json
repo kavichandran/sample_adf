@@ -1,0 +1,24 @@
+{
+	"name": "DS_ADLSA06_SourceFiles",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLSADEA06",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "SourceFiles",
+				"fileSystem": "adea06"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

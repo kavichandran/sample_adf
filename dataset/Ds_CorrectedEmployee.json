@@ -1,0 +1,25 @@
+{
+	"name": "Ds_CorrectedEmployee",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLSADEA06",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "employees.csv",
+				"folderPath": "DiffFiles",
+				"fileSystem": "adea06"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

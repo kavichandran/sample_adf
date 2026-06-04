@@ -1,0 +1,21 @@
+{
+	"name": "DS_SoourceNestedJson",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLSADEA06",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "nested Jsonsales.json",
+				"folderPath": "JsonSourceFiles",
+				"fileSystem": "adea06"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

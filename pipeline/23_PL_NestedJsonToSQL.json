@@ -1,0 +1,131 @@
+{
+	"name": "23_PL_NestedJsonToSQL",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['id']"
+								},
+								"sink": {
+									"name": "id",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['date']"
+								},
+								"sink": {
+									"name": "date",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['customer']"
+								},
+								"sink": {
+									"name": "customer",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['items'][0]['product']"
+								},
+								"sink": {
+									"name": "items_product",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['items'][0]['quantity']"
+								},
+								"sink": {
+									"name": "items_quantity",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['items'][0]['price']"
+								},
+								"sink": {
+									"name": "items_price",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['total']"
+								},
+								"sink": {
+									"name": "total",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['payment_method']"
+								},
+								"sink": {
+									"name": "Payment_method",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_SoourceNestedJson",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_SalesJson_tbl",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2026-06-03T01:30:39Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

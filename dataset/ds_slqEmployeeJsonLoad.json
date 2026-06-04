@@ -1,0 +1,17 @@
+{
+	"name": "ds_slqEmployeeJsonLoad",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "JsonEmployees"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
