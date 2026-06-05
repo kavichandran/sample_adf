@@ -1,0 +1,53 @@
+{
+	"name": "dataflow3",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Ds_NestedJsonSrc_conn",
+						"type": "DatasetReference"
+					},
+					"name": "Json"
+				}
+			],
+			"sinks": [
+				{
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "flatten1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          sales as (customer as string, date as date, id as short, items as (price as integer, product as string, quantity as short)[], payment_method as string, total as integer)[]",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'singleDocument') ~> Json",
+				"Json foldDown(unrollMultiple(sales,sales.items),",
+				"     mapColumn(",
+				"          customer = sales.customer,",
+				"          date = sales.date,",
+				"          id = sales.id,",
+				"          price = sales.items.price,",
+				"          product = sales.items.product,",
+				"          quantity = sales.items.quantity,",
+				"          payment_method = sales.payment_method,",
+				"          total = sales.total",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}
