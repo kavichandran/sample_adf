@@ -6,47 +6,61 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "Ds_NestedJsonSrc_conn",
+						"referenceName": "EmployeeDS_txt",
 						"type": "DatasetReference"
 					},
 					"name": "Json"
-				}
-			],
-			"sinks": [
+				},
 				{
-					"name": "sink1"
+					"dataset": {
+						"referenceName": "deptcsv_DS",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
 				}
 			],
+			"sinks": [],
 			"transformations": [
 				{
-					"name": "flatten1"
+					"name": "assert1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "filter1"
 				}
 			],
 			"scriptLines": [
 				"source(output(",
-				"          sales as (customer as string, date as date, id as short, items as (price as integer, product as string, quantity as short)[], payment_method as string, total as integer)[]",
+				"          EmployeeID as short,",
+				"          First_name as string,",
+				"          Last_Name as string,",
+				"          MailId as string,",
+				"          Contact as string,",
+				"          DOJ as date,",
+				"          Jobid as short,",
+				"          Salary as short,",
+				"          MGRID as string,",
+				"          DeptID as short,",
+				"          Fullname as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false,",
-				"     documentForm: 'singleDocument') ~> Json",
-				"Json foldDown(unrollMultiple(sales,sales.items),",
-				"     mapColumn(",
-				"          customer = sales.customer,",
-				"          date = sales.date,",
-				"          id = sales.id,",
-				"          price = sales.items.price,",
-				"          product = sales.items.product,",
-				"          quantity = sales.items.quantity,",
-				"          payment_method = sales.payment_method,",
-				"          total = sales.total",
+				"     ignoreNoFilesFound: false) ~> Json",
+				"source(output(",
+				"          Deptid as integer,",
+				"          Name as string,",
+				"          Location as string",
 				"     ),",
-				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> flatten1",
-				"flatten1 sink(allowSchemaDrift: true,",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     ignoreNoFilesFound: false) ~> source1",
+				"Json, source1 assert(expectTrue(instr(MailId, \"@\")>1, false, 'checkEmployeeID'),",
+				"     expectUnique(EmployeeID, false, 'emplyeeunique'),",
+				"     expectExists(Json@DeptID == source1@Deptid, false, 'integrety')) ~> assert1",
+				"assert1 derive(Error = isError()) ~> derivedColumn1",
+				"derivedColumn1 filter(Error==false()) ~> filter1"
 			]
 		}
 	}
