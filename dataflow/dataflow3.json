@@ -6,61 +6,54 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "EmployeeDS_txt",
-						"type": "DatasetReference"
-					},
-					"name": "Json"
-				},
-				{
-					"dataset": {
-						"referenceName": "deptcsv_DS",
+						"referenceName": "DS_EmployeeSkillstbl",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Tblskils",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
-					"name": "assert1"
-				},
-				{
-					"name": "derivedColumn1"
-				},
-				{
-					"name": "filter1"
+					"name": "parse1"
 				}
 			],
 			"scriptLines": [
 				"source(output(",
-				"          EmployeeID as short,",
-				"          First_name as string,",
-				"          Last_Name as string,",
-				"          MailId as string,",
-				"          Contact as string,",
-				"          DOJ as date,",
-				"          Jobid as short,",
-				"          Salary as short,",
-				"          MGRID as string,",
-				"          DeptID as short,",
-				"          Fullname as string",
+				"          Empid as integer,",
+				"          EmpName as string,",
+				"          EmpSkills as string,",
+				"          EmpLocation as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> Json",
-				"source(output(",
-				"          Deptid as integer,",
-				"          Name as string,",
-				"          Location as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 parse(EmpSkills = EmpSkills ? (Primaryskills as string,",
+				"          secondarySkills as string),",
+				"     format: 'delimited',",
+				"     columnNamesAsHeader: true,",
+				"     columnDelimiter: ',',",
+				"     nullValue: '') ~> parse1",
+				"parse1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1",
-				"Json, source1 assert(expectTrue(instr(MailId, \"@\")>1, false, 'checkEmployeeID'),",
-				"     expectUnique(EmployeeID, false, 'emplyeeunique'),",
-				"     expectExists(Json@DeptID == source1@Deptid, false, 'integrety')) ~> assert1",
-				"assert1 derive(Error = isError()) ~> derivedColumn1",
-				"derivedColumn1 filter(Error==false()) ~> filter1"
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
 	}
